@@ -12,8 +12,9 @@ angular.module('material.components.switch', [
 
 .directive('mdSwitch', [
   'mdCheckboxDirective',
-  'mdRadioButtonDirective',
   '$mdTheming',
+  '$mdEffects',
+  '$mdUtil',
   MdSwitch
 ]);
 
@@ -51,35 +52,72 @@ angular.module('material.components.switch', [
  *
  * </hljs>
  */
-function MdSwitch(checkboxDirectives, radioButtonDirectives, $mdTheming) {
+function MdSwitch(checkboxDirectives, $mdTheming, $mdEffects, $mdUtil) {
   var checkboxDirective = checkboxDirectives[0];
-  var radioButtonDirective = radioButtonDirectives[0];
 
   return {
     restrict: 'E',
     transclude: true,
     template:
-      '<div class="md-switch-bar"></div>' +
-      '<div class="md-switch-thumb">' +
-        radioButtonDirective.template +
+      '<div class="md-bar">' +
+      '</div>' +
+      '<div class="md-thumb-container">' +
+        '<div class="md-thumb">' +
+        '</div>' +
       '</div>',
     require: '?ngModel',
     compile: compile
   };
 
   function compile(element, attr) {
-    
-    var thumb = angular.element(element[0].querySelector('.md-switch-thumb'));
-    //Copy down disabled attributes for checkboxDirective to use
-    thumb.attr('disabled', attr.disabled);
-    thumb.attr('ngDisabled', attr.ngDisabled);
+    var checkboxLink = checkboxDirective.compile(element, attr);
 
-    var checkboxLink = checkboxDirective.compile(thumb, attr);
+    return function postLink(scope, element, attr, ngModelCtrl) {
+      ngModelCtrl = ngModelCtrl || $mdUtil.createFakeNgModel();
 
-    return function (scope, element, attr, ngModelCtrl) {
-      $mdTheming(element);
-      var thumb = angular.element(element[0].querySelector('.md-switch-thumb'));
-      return checkboxLink(scope, thumb, attr, ngModelCtrl);
+      var thumb = angular.element(element[0].querySelector('.md-thumb'));
+      var thumbContainer = angular.element(element[0].querySelector('.md-thumb-container'));
+      checkboxLink(scope, element, attr, ngModelCtrl);
+
+      var hammertime = new Hammer(element[0]);
+      hammertime.on('panstart', onPanStart);
+      hammertime.on('pan', onPan);
+      hammertime.on('panend', onPanEnd);
+
+      var pan;
+      function onPanStart(ev) {
+        if (pan || element[0].hasAttribute('disabled')) return;
+        pan = {
+          distance: thumbContainer.prop('clientWidth'),
+          startX: ev.center.x,
+        };
+        pan.thumbStart = ngModelCtrl.$viewValue ? pan.distance : 0;
+        element.addClass('no-animate');
+      }
+      function onPan(ev) {
+        if (!pan) return;
+        thumbContainer.css($mdEffects.TRANSFORM, 'translate3d(' +
+                    getPosition(ev.center.x) + 'px,0,0)');
+      }
+      function onPanEnd(ev) {
+        if (!pan) return;
+        var percent = Math.abs(getPosition(ev.center.x) / pan.distance);
+        var checked = ngModelCtrl.$viewValue;
+
+        if ((checked && percent < 0.5) || (!checked && percent > 0.5)) {
+          element.triggerHandler('click');
+        }
+        element.removeClass('no-animate');
+        thumbContainer.css($mdEffects.TRANSFORM, '');
+
+        pan = null;
+      }
+
+      function getPosition(x) {
+        var position = pan.thumbStart + (x - pan.startX);
+        return Math.max(0, Math.min(position, pan.distance));
+      }
     };
   }
+
 }

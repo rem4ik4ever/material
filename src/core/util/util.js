@@ -32,6 +32,18 @@ angular.module('material.core')
       return false;
     },
 
+    createFakeNgModel: function() {
+      return {
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+          this.$render();
+        },
+        $parsers: [],
+        $formatters: [],
+        $render: angular.noop
+      };
+    },
+
     /**
      * Checks to see if the element or its parents are disabled.
      * @param element DOM element to start scanning for `disabled` attribute

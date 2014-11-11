@@ -27,8 +27,6 @@ var through2 = require('through2');
 var uglify = require('gulp-uglify');
 var webserver = require('gulp-webserver');
 
-var karma = require('karma').server;
-
 var buildConfig = require('./config/build.config');
 var utils = require('./scripts/gulp-utils.js');
 
@@ -204,7 +202,6 @@ function buildTheme(theme) {
 
 gulp.task('build-scss', ['build-default-theme'], function() {
   var defaultThemeContents = fs.readFileSync('themes/_default-theme.scss');
-
 
   var scssGlob = path.join(config.paths, '*.scss');
   gutil.log("Building css files...");

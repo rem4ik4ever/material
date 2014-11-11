@@ -1,8 +1,7 @@
 $radio-width: 16px;
 $radio-height: $radio-width;
 
-md-radio-button,
-.md-switch-thumb { // Used in switch
+md-radio-button {
   display: block;
   margin: 15px;
   white-space: nowrap;

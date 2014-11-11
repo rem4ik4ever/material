@@ -15,6 +15,7 @@ angular.module('material.components.checkbox', [
     '$mdAria',
     '$mdConstant',
     '$mdTheming',
+    '$mdUtil',
     MdCheckboxDirective
   ]);
 
@@ -53,7 +54,7 @@ angular.module('material.components.checkbox', [
  * </hljs>
  *
  */
-function MdCheckboxDirective(inputDirectives, $mdInkRipple, $mdAria, $mdConstant, $mdTheming) {
+function MdCheckboxDirective(inputDirectives, $mdInkRipple, $mdAria, $mdConstant, $mdTheming, $mdUtil) {
   var inputDirective = inputDirectives[0];
 
   var CHECKED_CSS = 'md-checked';
@@ -85,13 +86,7 @@ function MdCheckboxDirective(inputDirectives, $mdInkRipple, $mdAria, $mdConstant
       $mdTheming(element);
 
       // Create a mock ngModel if the user doesn't provide one
-      ngModelCtrl = ngModelCtrl || {
-        $setViewValue: function(value) {
-          this.$viewValue = value;
-        },
-        $parsers: [],
-        $formatters: []
-      };
+      ngModelCtrl = ngModelCtrl || $mdUtil.createFakeNgModel();
 
       $mdAria.expectWithText(tElement, 'aria-label');
 
@@ -108,7 +103,7 @@ function MdCheckboxDirective(inputDirectives, $mdInkRipple, $mdAria, $mdConstant
       ngModelCtrl.$render = render;
 
       function keypressHandler(ev) {
-        if(ev.which === $mdConstant.KEY_CODE.SPACE) {
+        if (ev.which === $mdConstant.KEY_CODE.SPACE) {
           ev.preventDefault();
           listener(ev);
         }

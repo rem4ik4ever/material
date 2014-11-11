@@ -1,42 +1,53 @@
-$switch-width: $baseline-grid * 8;
+$switch-width: $baseline-grid * 4;
+$switch-height: $baseline-grid * 2;
+
+$thumb-size: $baseline-grid * 2;
+$bar-height: $thumb-size - 8;
 
 md-switch {
-  display: block;
+
+  width: $switch-width;
+  height: $switch-height;
   position: relative;
-  height: $baseline-grid * 3;
-  margin: $baseline-grid;
+  user-select: none;
 
   display: flex;
   align-items: center;
 
-  .md-switch-bar {
+  .md-bar {
+    left: $thumb-size / 2;
+    width: $switch-width - $thumb-size;
+    top: $switch-height / 2 - $bar-height / 2;
+    height: $bar-height;
+    background: blue;
     position: absolute;
-    left: $baseline-grid * 2;
-    top: $baseline-grid * 1.5;
-    width: $baseline-grid * 4;
-    height: 1px;
-    pointer-events: none;
   }
 
-  /* used also in _radio-button.scss */
-  .md-switch-thumb {
+  .md-thumb-container {
+    top: 0;
+    left: 0;
+    width: $switch-width - $thumb-size;
+    position: absolute;
+    transition: transform 0.2s linear;
+    transform: translate3d(0,0,0);
+  }
+  &.no-animate .md-thumb-container {
+    transition-duration: 0s;
+  }
+  &.md-checked .md-thumb-container {
+    transform: translate3d(100%,0,0);
+  }
+
+  .md-thumb {
     position: absolute;
     margin: 0;
     left: 0;
     top: 0;
     outline: none;
-
-    .md-container {
-      position: absolute;
-      transition: transform 0.2s linear;
-      transform: translate3d(0,0,0);
-    }
-    &.md-checked .md-container {
-      transform: translate3d($switch-width - 16,0,0);
-    }
-
-    .md-label {
-      margin-left: $baseline-grid * 9;
-    }
+    height: $thumb-size;
+    width: $thumb-size;
+    border-radius: 50%;
+    background: red;
   }
+
 }

@@ -94,12 +94,12 @@ function InkRippleService($window, $$rAF, $mdEffects, $timeout, $mdUtil) {
     function createRipple(left, top, positionsAreAbsolute) {
 
       var rippleEl = angular.element('<div class="md-ripple">')
-            .css($mdEffects.ANIMATION_DURATION, options.animationDuration + 'ms')
-            .css($mdEffects.ANIMATION_NAME, options.animationName)
-            .css($mdEffects.ANIMATION_TIMING, options.animationTimingFunction)
-            .on($mdEffects.ANIMATIONEND_EVENT, function() {
-              rippleEl.remove();
-            });
+        .css($mdEffects.ANIMATION_DURATION, options.animationDuration + 'ms')
+        .css($mdEffects.ANIMATION_NAME, options.animationName)
+        .css($mdEffects.ANIMATION_TIMING, options.animationTimingFunction)
+        .on($mdEffects.ANIMATIONEND_EVENT, function() {
+          rippleEl.remove();
+        });
 
       if (!rippleContainer) {
         rippleContainer = angular.element('<div class="md-ripple-container">');
