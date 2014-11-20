@@ -22,15 +22,20 @@ $button-fab-toast-offset: $toast-height + $toast-margin;
 
 .md-button {
 
+  display: inline-block;
   user-select: none;
   position: relative; //for child absolute-positioned <canvas>
 
   outline: none;
   border: 0;
-  padding: 6px;
-  margin: 0;
+  padding: 0 8px;
+  min-width: 64px;
+  min-height: 36px;
+  line-height: 36px;
+  box-sizing: border-box;
   background: transparent;
   white-space: nowrap;
+  margin: 0 8px;
 
   text-align: center;
 
@@ -41,7 +46,6 @@ $button-fab-toast-offset: $toast-height + $toast-margin;
   font-variant: inherit;
   font-size: inherit;
   font-family: inherit;
-  line-height: inherit;
   text-decoration: none;
 
   cursor: pointer;
@@ -50,6 +54,11 @@ $button-fab-toast-offset: $toast-height + $toast-margin;
   transition: box-shadow $swift-ease-in-out-duration $swift-ease-in-out-timing-function,
               background-color $swift-ease-in-out-duration $swift-ease-in-out-timing-function,
               transform $swift-ease-in-out-duration $swift-ease-in-out-timing-function;
+
+  &:not(.md-fab) md-icon {
+    position: relative;
+    top: 6px;
+  }
 
   &.ng-hide {
     transition: none;
@@ -83,6 +92,7 @@ $button-fab-toast-offset: $toast-height + $toast-margin;
     z-index: $z-index-fab;
 
     width: $button-fab-width;
+    min-width: $button-fab-width;
     height: $button-fab-height;
 
     border-radius: 50%;
